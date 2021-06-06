@@ -30,6 +30,3 @@ const wallet = new Wallet({
 const mnemonic = await wallet.generateMnemonic();
 ```
 
-### Credits
-
-This client is provided by [Chia Blockchain Explorer](https://www.chiaexplorer.com).
