@@ -1,4 +1,4 @@
-# Chia Client
+# Chia JS
 
 TypeScript client for communicating with [Chia](https://www.chia.net/) RPC interfaces. All API calls return promises.
 
