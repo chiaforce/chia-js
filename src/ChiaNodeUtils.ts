@@ -11,15 +11,16 @@ export const getChiaRootPath = (): string => {
 
   chiaRootPath = resolve(
     homedir(),
-    process.env["CHIA_ROOT"] || ".chia/mainnet"
+    process.env["CHIA_ROOT"] || ".chia/testnet_7"
   );
-
+  
   return chiaRootPath;
 };
 
 export const getChiaConfig = (): ChiaConfig => {
   const configFilePath = resolve(getChiaRootPath(), "config", "config.yaml");
-  return parse(readFileSync(configFilePath, "utf8")) as ChiaConfig;
+  const configFile = readFileSync(configFilePath, "utf8");
+  return parse(configFile) as ChiaConfig;
 };
 
 export const getChiaFilePath = (relativePath: string): string => {

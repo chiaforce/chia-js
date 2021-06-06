@@ -14,10 +14,18 @@ import {
   TransactionsResponse,
   WalletBalanceResponse,
   WalletsResponse,
+  FarmedAmountResponse,
+  TransactionCountResponse,
+  CreateNewCCWalletResponse,
+  CreateExistingCCWalletResponse,
+  CreateNewAdminRlWalletResponse,
+  CreateNewUserRlWalletResponse,
+  CreateSignedTransactionResponse,
 } from "./types/Wallet/RpcResponse";
 import { Transaction } from "./types/Wallet/Transaction";
 import { WalletBalance } from "./types/Wallet/WalletBalance";
 import { WalletInfo } from "./types/Wallet/WalletInfo";
+import { Addition } from "./types/Wallet/Addition";
 // @ts-ignore
 import { address_to_puzzle_hash, puzzle_hash_to_address, get_coin_info } from "chia-utils";
 
@@ -193,8 +201,7 @@ class Wallet extends RpcClient {
     fee: number
   ): Promise<Transaction> {
     const { transaction } = await this.request<TransactionResponse>(
-      "send_transaction",
-      {
+      "send_transaction",{
         wallet_id: walletId,
         amount,
         address,
@@ -205,8 +212,99 @@ class Wallet extends RpcClient {
     return transaction;
   }
 
+  public async createNewCCWallet(
+    host: string,
+    amount: number,
+  ): Promise<CreateNewCCWalletResponse> {
+    return await this.request<CreateNewCCWalletResponse>(
+      "create_new_wallet",{ 
+        host,
+        wallet_type: "cc_wallet",
+        mode: "new",
+        amount
+      }
+    );
+  }
+
+  public async createExistingCCWallet(
+    host: string,
+    colour: string,
+  ): Promise<CreateExistingCCWalletResponse> {
+    return await this.request<CreateExistingCCWalletResponse>(
+      "create_new_wallet",{ 
+        host,
+        wallet_type: "cc_wallet",
+        mode: "existing",
+        colour
+      }
+    )
+  }
+
+  public async createNewAdminRLWallet(
+    interval: number,
+    limit: number,
+    pubkey: string,
+    amount: number,
+    fee?: number,
+  ): Promise<CreateNewAdminRlWalletResponse> {
+    return await this.request<CreateNewAdminRlWalletResponse>(
+      "create_new_wallet",{
+        host,
+        wallet_type: "rl_wallet",
+        rl_type: "admin",
+        interval,
+        limit,
+        pubkey,
+        amount,
+        fee: fee || 0
+      }
+    )
+  }
+
+  public async createNewUserRLWallet(): Promise<CreateNewUserRlWalletResponse> {
+    return await this.request<CreateNewUserRlWalletResponse>(
+      "create_new_wallet",{
+        host,
+        wallet_type: "rl_wallet",
+        rl_type: "user"
+      }
+    )
+  }
+
+  public async createNewDIDWallet() {
+
+  }
+
+  public async createRecoveryDIDWallet() {
+
+  }
+
+  // ######
+  public async createSignedTransaction(
+    additions: Array<Addition>,
+    coins?: string,
+    fee?: number,
+  ): Promise<CreateSignedTransactionResponse> {
+    return this.request<CreateSignedTransactionResponse>(
+      "create_signed_transaction", {
+        additions,
+        coins,
+        fee  
+      }
+    )
+
+  }
+
   public async createBackup(filePath: string): Promise<{}> {
     return this.request<{}>("create_backup", { file_path: filePath });
+  }
+
+  public async getFarmedAmount(): Promise<FarmedAmountResponse> {
+    return this.request<FarmedAmountResponse>("get_farmed_amount", {});
+  }
+
+  public async getTransactionCount(walletId: string): Promise<TransactionCountResponse> {
+    return this.request<TransactionCountResponse>("get_transaction_count", {wallet_id: walletId});
   }
   
   /* https://github.com/CMEONE/chia-utils */

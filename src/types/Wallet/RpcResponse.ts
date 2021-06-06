@@ -56,3 +56,44 @@ export interface NextAddressResponse extends RpcResponse {
     wallet_id: number;
     address: string;
 }
+
+export interface FarmedAmountResponse extends RpcResponse {
+  farmed_amount: number;
+  pool_reward_amount: number;
+  farmer_reward_amount: number;
+  fee_amount: number;
+  last_height_farmed: number;
+}
+
+export interface TransactionCountResponse extends RpcResponse {
+  wallet_id: number;
+  count: number;
+}
+
+export interface CreateNewCCWalletResponse extends RpcResponse {
+  colour: string;
+  type: number;
+  wallet_id: number;
+}
+
+export interface CreateExistingCCWalletResponse extends RpcResponse {
+  type: number;
+}
+
+export interface CreateNewAdminRlWalletResponse extends RpcResponse {
+  success: boolean;
+  id: number;
+  type: number;
+  origin: any;
+  pubkey: string;
+}
+
+export interface CreateNewUserRlWalletResponse extends RpcResponse {
+  id: number;
+  type: number;
+  pubkey: string;
+}
+
+export interface CreateSignedTransactionResponse extends RpcResponse {
+  signed_tx: Object;
+}

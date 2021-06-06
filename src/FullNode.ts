@@ -8,6 +8,8 @@ import {
   BlockRecordResponse,
   UnfinishedBlockHeadersResponse,
   AdditionsAndRemovalsResponse,
+  NetworkInfoResponse,
+  IntiialFreezePeriodResponse,
 } from "./types/FullNode/RpcResponse";
 import { ChiaOptions, RpcClient } from "./RpcClient";
 import { Block } from "./types/FullNode/Block";
@@ -80,6 +82,14 @@ class FullNode extends RpcClient {
     return this.request<BlockRecordResponse>("get_block_record", {
       header_hash: hash,
     });
+  }
+
+  public async getNetworkInfo(): Promise<NetworkInfoResponse> {
+    return this.request<NetworkInfoResponse>("get_network_info", {});
+  }
+
+  public async getInitialFreezePeriod(): Promise<IntiialFreezePeriodResponse> {
+    return this.request<IntiialFreezePeriodResponse>("get_initial_freeze_period", {});
   }
 
   public async getUnfinishedBlockHeaders(

@@ -49,3 +49,12 @@ export interface NetspaceResponse extends RpcResponse {
 export interface ConnectionResponse extends RpcResponse{
     connections: Array<Connection>;
 }
+
+export interface NetworkInfoResponse extends RpcResponse {
+    network_name: String;
+    network_prefix: String;
+}
+
+export interface IntiialFreezePeriodResponse extends RpcResponse {
+    INITIAL_FREEZE_END_TIMESTAMP: String;
+}

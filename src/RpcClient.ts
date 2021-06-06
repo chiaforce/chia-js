@@ -42,7 +42,6 @@ class RpcClient {
     const { data } = await axios.post<T>(`${this.baseUri()}/${route}`, body, {
       httpsAgent: this.agent,
     });
-
     return data;
   }
 }
