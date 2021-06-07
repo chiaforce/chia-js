@@ -21,6 +21,9 @@ import {
   CreateNewAdminRlWalletResponse,
   CreateNewUserRlWalletResponse,
   CreateSignedTransactionResponse,
+  CCGetNameResponse,
+  CCSpendResponse,
+  CCGetColourResponse
 } from "./types/Wallet/RpcResponse";
 import { Transaction } from "./types/Wallet/Transaction";
 import { WalletBalance } from "./types/Wallet/WalletBalance";
@@ -279,7 +282,6 @@ class Wallet extends RpcClient {
 
   }
 
-  // ######
   public async createSignedTransaction(
     additions: Array<Addition>,
     coins?: string,
@@ -287,12 +289,11 @@ class Wallet extends RpcClient {
   ): Promise<CreateSignedTransactionResponse> {
     return this.request<CreateSignedTransactionResponse>(
       "create_signed_transaction", {
-        additions,
+        additions: JSON.stringify(additions),
         coins,
         fee  
       }
     )
-
   }
 
   public async createBackup(filePath: string): Promise<{}> {
@@ -306,7 +307,56 @@ class Wallet extends RpcClient {
   public async getTransactionCount(walletId: string): Promise<TransactionCountResponse> {
     return this.request<TransactionCountResponse>("get_transaction_count", {wallet_id: walletId});
   }
+
+  // For colour coin wallet
+  public async ccSetName(
+    wallet_id: number,
+    name: string,
+  ): Promise<number> {
+    return this.request<number>(
+      "cc_set_name", {
+        wallet_id,
+        name
+      }
+    )
+  }
+
+  public async ccGetName(
+    wallet_id: number,
+  ): Promise<CCGetNameResponse> {
+    return this.request<CCGetNameResponse>(
+      "cc_get_name", {
+        wallet_id
+      }
+    )
+  }
   
+  public async ccSpend(
+    wallet_id: number,
+    inner_address: string,
+    amount: number,
+    fee?: number
+  ): Promise<CCSpendResponse> {
+    return this.request<CCSpendResponse>(
+      "cc_spend", {
+        wallet_id,
+        inner_address,
+        amount,
+        fee: fee !== undefined? fee : 0
+      }
+    )
+  }
+
+  public async ccGetColour(
+    wallet_id: number,
+  ): Promise<CCGetColourResponse> {
+    return this.request<CCGetColourResponse>(
+      "cc_get_colour", {
+        wallet_id
+      }
+    )
+  }
+
   /* https://github.com/CMEONE/chia-utils */
   public addressToPuzzleHash(address: string): string {
     return address_to_puzzle_hash(address);

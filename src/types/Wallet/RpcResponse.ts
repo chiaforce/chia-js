@@ -97,3 +97,18 @@ export interface CreateNewUserRlWalletResponse extends RpcResponse {
 export interface CreateSignedTransactionResponse extends RpcResponse {
   signed_tx: Object;
 }
+
+export interface CCGetNameResponse extends RpcResponse {
+  wallet_id: number;
+  name: string;
+}
+
+export interface CCSpendResponse extends RpcResponse {
+  transaction: string;
+  transaction_id: string;
+}
+
+export interface CCGetColourResponse extends RpcResponse {
+  wallet_id: number;
+  colour: string;
+}
