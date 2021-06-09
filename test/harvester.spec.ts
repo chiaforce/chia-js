@@ -3,7 +3,7 @@ import { Harvester } from "../index";
 
 describe("Harvester", () => {
   describe("RPC calls", () => {
-    const harvester = new Harvester();
+    const harvester = new Harvester({net: "testnet_7"});
 
     it("calls get_plots", async () => {
       nock("https://localhost:8560")

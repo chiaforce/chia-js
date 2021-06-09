@@ -3,7 +3,9 @@ import { Wallet } from "../index";
 
 describe("Wallet", () => {
   describe("RPC calls", () => {
-    const wallet = new Wallet();
+    const wallet = new Wallet({
+      net: "testnet_7"
+    });
 
     it("calls log_in with type=start", async () => {
       nock("https://localhost:9256")

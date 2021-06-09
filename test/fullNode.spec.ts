@@ -3,7 +3,7 @@ import { FullNode } from "../index";
 
 describe("Full Node", () => {
   describe("RPC calls", () => {
-    const fullNode = new FullNode();
+    const fullNode = new FullNode({net: "testnet_7"});
 
     it("calls get_blockchain_state", async () => {
       nock("https://localhost:8555")

@@ -5,6 +5,7 @@ import axios from "axios";
 type Protocol = "https" | "http";
 
 interface ChiaOptions {
+  net: string;
   protocol: Protocol;
   hostname: string;
   port: number;
@@ -14,19 +15,21 @@ interface ChiaOptions {
 }
 
 class RpcClient {
+  private readonly net: string;
   private readonly protocol: Protocol;
   private readonly hostname: string;
   private readonly port: number;
   private readonly agent: Agent;
-  private readonly certPath: string;
-  private readonly keyPath: string;
+  // private readonly certPath: string;
+  // private readonly keyPath: string;
 
   public constructor(options: ChiaOptions) {
+    this.net = options.net;
     this.protocol = options.protocol;
     this.hostname = options.hostname;
     this.port = options.port;
-    this.certPath = options.certPath;
-    this.keyPath = options.keyPath;
+    // this.certPath = options.certPath;
+    // this.keyPath = options.keyPath;
 
     this.agent = new Agent({
       ...(typeof options.caCertPath !== 'boolean' ? { ca: readFileSync(options.caCertPath) } : {}),

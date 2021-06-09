@@ -18,29 +18,31 @@ import { getChiaConfig, getChiaFilePath } from "./ChiaNodeUtils";
 // @ts-ignore
 import { address_to_puzzle_hash, puzzle_hash_to_address, get_coin_info } from "chia-utils";
 
-const chiaConfig = getChiaConfig();
-const defaultProtocol = "https";
-const defaultHostname = chiaConfig?.self_hostname || "localhost";
-const defaultPort = chiaConfig?.full_node.rpc_port || 8555;
-// You can use cert and key from daemon
-const defaultCaCertPath = chiaConfig?.private_ssl_ca.crt;
-const defaultCertPath = chiaConfig?.daemon_ssl.private_crt;
-const defaultCertKey = chiaConfig?.daemon_ssl.private_key;
-
-// Or you can use cert and key from full_node
-// const defaultCaCertPath = chiaConfig?.private_ssl_ca.crt;
-// const defaultCertPath = chiaConfig?.full_node.ssl.private_crt;
-// const defaultCertKey = chiaConfig?.full_node.ssl.private_key;
-
 class FullNode extends RpcClient {
   public constructor(options?: Partial<ChiaOptions> & CertPath) {
+    const net = options?.net || "mainnet";
+    const chiaConfig = getChiaConfig(net);
+    const defaultProtocol = "https";
+    const defaultHostname = chiaConfig?.self_hostname || "localhost";
+    const defaultPort = chiaConfig?.full_node.rpc_port || 8555;
+    // You can use cert and key from daemon
+    const defaultCaCertPath = chiaConfig?.private_ssl_ca.crt;
+    const defaultCertPath = chiaConfig?.daemon_ssl.private_crt;
+    const defaultCertKey = chiaConfig?.daemon_ssl.private_key;
+
+    // Or you can use cert and key from full_node
+    // const defaultCaCertPath = chiaConfig?.private_ssl_ca.crt;
+    // const defaultCertPath = chiaConfig?.full_node.ssl.private_crt;
+    // const defaultCertKey = chiaConfig?.full_node.ssl.private_key;
+
     super({
+      net,
       protocol: options?.protocol || defaultProtocol,
       hostname: options?.hostname || defaultHostname,
       port: options?.port || defaultPort,
-      caCertPath: options?.caCertPath || getChiaFilePath(defaultCaCertPath),
-      certPath: options?.certPath || getChiaFilePath(defaultCertPath),
-      keyPath: options?.keyPath || getChiaFilePath(defaultCertKey),
+      caCertPath: options?.caCertPath || getChiaFilePath(net, defaultCaCertPath),
+      certPath: options?.certPath || getChiaFilePath(net, defaultCertPath),
+      keyPath: options?.keyPath || getChiaFilePath(net, defaultCertKey),
     });
   }
 

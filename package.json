@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "jest --runInBand test/wallet.spec.ts",
+    "test": "jest --runInBand test",
     "prepare": "rm -rf dist && npm run build"
   },
   "repository": {

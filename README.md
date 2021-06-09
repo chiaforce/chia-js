@@ -30,3 +30,10 @@ const wallet = new Wallet({
 const mnemonic = await wallet.generateMnemonic();
 ```
 
+# API
+## FullNode
+
+## Wallet
+
+## Connection Management
+

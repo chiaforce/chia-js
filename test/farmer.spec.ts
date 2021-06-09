@@ -3,7 +3,9 @@ import { Farmer } from "../index";
 
 describe("Farmer", () => {
   describe("RPC calls", () => {
-    const farmer = new Farmer();
+    const farmer = new Farmer({
+      net: "testnet_7"
+    });
 
     it("calls get_signage_point", async () => {
       nock("https://localhost:8559")
