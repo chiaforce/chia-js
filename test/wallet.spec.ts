@@ -218,7 +218,7 @@ describe("Wallet", () => {
           address: "fakeAddress",
           fee: 1,
         })
-        .reply(200, { transaction: "success" });
+        .reply(200, "success");
 
       expect(
         await wallet.sendTransaction("fakeWalletId", 9, "fakeAddress", 1)
