@@ -1,16 +1,9 @@
 import * as nock from "nock";
 import { FullNode } from "../index";
 
-jest.mock("fs");
-jest.mock("yaml");
-
 describe("Full Node", () => {
   describe("RPC calls", () => {
-    const fullNode = new FullNode({
-      caCertPath: "/dev/null/cert.crt",
-      certPath: "/dev/null/cert.crt",
-      keyPath: "/dev/null/cert.key",
-    });
+    const fullNode = new FullNode();
 
     it("calls get_blockchain_state", async () => {
       nock("https://localhost:8555")
@@ -39,14 +32,13 @@ describe("Full Node", () => {
       expect(await fullNode.getBlockRecordByHeight(42)).toEqual("success");
     });
 
-    // ######
     it("calls get_blocks with start and end in body", async () => {
       nock("https://localhost:8555")
         .defaultReplyHeaders({ "access-control-allow-origin": "*" })
-        .post("/get_blocks", { start: 0, end: 1 })
+        .post("/get_blocks", {start: 0, end: 10, exclude_header_hash: false })
         .reply(200, "success");
-      
-      expect(await fullNode.getBlocks(0, 1)).toEqual("success");
+
+      expect(await fullNode.getBlocks(0, 10)).toEqual("success");
     });
 
     it("calls get_block_record with header_hash in body", async () => {
@@ -58,17 +50,13 @@ describe("Full Node", () => {
       expect(await fullNode.getBlockRecord("fakeHeaderHash")).toEqual("success");
     });
 
-    // ######
     it("calls get_network_space with newer_block_header_hash and older_block_header_hash in body", async () => {
       nock("https://localhost:8555")
         .defaultReplyHeaders({ "access-control-allow-origin": "*" })
-        .post("/get_network_space", { 
-          newer_block_header_hash: "fakeNewerHeaderHash",
-          older_block_header_hash: "fakeOlderHeaderHash",
-        })
+        .post("/get_network_space", {newer_block_header_hash: "newerBlockHeaderHash", older_block_header_hash: "olderBlockHeaderHash"})
         .reply(200, "success");
 
-      expect(await fullNode.getNetworkSpace("fakeNewHeaderHash", "fakeOlderHeaderHash")).toEqual(
+      expect(await fullNode.getNetworkSpace("newerBlockHeaderHash", "olderBlockHeaderHash")).toEqual(
         "success"
       );
     });

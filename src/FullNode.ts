@@ -22,9 +22,15 @@ const chiaConfig = getChiaConfig();
 const defaultProtocol = "https";
 const defaultHostname = chiaConfig?.self_hostname || "localhost";
 const defaultPort = chiaConfig?.full_node.rpc_port || 8555;
+// You can use cert and key from daemon
 const defaultCaCertPath = chiaConfig?.private_ssl_ca.crt;
 const defaultCertPath = chiaConfig?.daemon_ssl.private_crt;
 const defaultCertKey = chiaConfig?.daemon_ssl.private_key;
+
+// Or you can use cert and key from full_node
+// const defaultCaCertPath = chiaConfig?.private_ssl_ca.crt;
+// const defaultCertPath = chiaConfig?.full_node.ssl.private_crt;
+// const defaultCertKey = chiaConfig?.full_node.ssl.private_key;
 
 class FullNode extends RpcClient {
   public constructor(options?: Partial<ChiaOptions> & CertPath) {
@@ -43,8 +49,8 @@ class FullNode extends RpcClient {
   }
 
   public async getNetworkSpace(
-    newerBlockHeaderHash: string,
-    olderBlockHeaderHash: string
+    newerBlockHeaderHash : string,
+    olderBlockHeaderHash : string
   ): Promise<NetspaceResponse> {
     return this.request<NetspaceResponse>("get_network_space", {
       newer_block_header_hash: newerBlockHeaderHash,
@@ -57,7 +63,7 @@ class FullNode extends RpcClient {
     end: number,
     excludeHeaderHash?: B
   ): Promise<BlocksResponse<Block>> {
-    return this.request("get_blocks", {
+    return this.request<BlocksResponse<Block>>("get_blocks", {
       start,
       end,
       exclude_header_hash: excludeHeaderHash || false,

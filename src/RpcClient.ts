@@ -18,17 +18,27 @@ class RpcClient {
   private readonly hostname: string;
   private readonly port: number;
   private readonly agent: Agent;
+  private readonly certPath: string;
+  private readonly keyPath: string;
 
   public constructor(options: ChiaOptions) {
     this.protocol = options.protocol;
     this.hostname = options.hostname;
     this.port = options.port;
+    this.certPath = options.certPath;
+    this.keyPath = options.keyPath;
+
     this.agent = new Agent({
       ...(typeof options.caCertPath !== 'boolean' ? { ca: readFileSync(options.caCertPath) } : {}),
       cert: readFileSync(options.certPath),
       key: readFileSync(options.keyPath),
       rejectUnauthorized: options.hostname !== "localhost",
+      host: options.hostname,
+      port: options.port
     });
+    // console.log("caCertPath", options.caCertPath)
+    // console.log("certPath", options.certPath)
+    // console.log("keyPath", options.keyPath);
   }
 
   private baseUri(): string {
@@ -39,6 +49,8 @@ class RpcClient {
     route: string,
     body: Record<string, string | number | boolean | string[] | undefined>
   ): Promise<T> {
+    console.log("\x1b[33m", `${route}`);
+    console.log("\x1b[32m", `curl --insecure --cert ${this.certPath} --key ${this.keyPath} -d '${JSON.stringify(body)}' -H "Content-Type: application/json" -X POST ${this.baseUri()}/${route} | python -m json.tool`);
     const { data } = await axios.post<T>(`${this.baseUri()}/${route}`, body, {
       httpsAgent: this.agent,
     });

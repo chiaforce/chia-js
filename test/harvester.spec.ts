@@ -1,16 +1,9 @@
 import * as nock from "nock";
 import { Harvester } from "../index";
 
-jest.mock("fs");
-jest.mock("yaml");
-
 describe("Harvester", () => {
   describe("RPC calls", () => {
-    const harvester = new Harvester({
-      caCertPath: "/dev/null/cert.crt",
-      certPath: "/dev/null/cert.crt",
-      keyPath: "/dev/null/cert.key",
-    });
+    const harvester = new Harvester();
 
     it("calls get_plots", async () => {
       nock("https://localhost:8560")

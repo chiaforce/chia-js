@@ -155,7 +155,7 @@ class Wallet extends RpcClient {
     return wallets;
   }
 
-  public async getWalletBalance(walletId: string): Promise<WalletBalance> {
+  public async getWalletBalance(walletId: number): Promise<WalletBalance> {
     const { wallet_balance } = await this.request<WalletBalanceResponse>(
       "get_wallet_balance",
       { wallet_id: walletId }
@@ -165,7 +165,7 @@ class Wallet extends RpcClient {
   }
 
   public async getTransaction(
-    walletId: string,
+    walletId: number,
     transactionId: string
   ): Promise<Transaction> {
     const { transaction } = await this.request<TransactionResponse>(
@@ -179,7 +179,7 @@ class Wallet extends RpcClient {
     return transaction;
   }
 
-  public async getTransactions(walletId: string, limit: number): Promise<Transaction[]> {
+  public async getTransactions(walletId: number, limit: number): Promise<Transaction[]> {
     const { transactions } = await this.request<TransactionsResponse>(
       "get_transactions",
       { wallet_id: walletId, end: limit }
@@ -188,17 +188,30 @@ class Wallet extends RpcClient {
     return transactions;
   }
 
-  public async getNextAddress(walletId: string): Promise<string> {
+  public async getNextAddress(walletId: number): Promise<string> {
     const { address } = await this.request<NextAddressResponse>(
       "get_next_address",
-      { wallet_id: walletId, new_address: true}
+      { 
+        wallet_id: walletId, 
+        new_address: true
+      }
     );
+    return address;
+  }
 
+  public async getCurrentAddress(walletId: number): Promise<string> {
+    const { address } = await this.request<NextAddressResponse>(
+      "get_next_address",
+      { 
+        wallet_id: walletId, 
+        new_address: false
+      }
+    );
     return address;
   }
 
   public async sendTransaction(
-    walletId: string,
+    walletId: number,
     amount: number,
     address: string,
     fee: number
@@ -220,7 +233,7 @@ class Wallet extends RpcClient {
     amount: number,
   ): Promise<CreateNewCCWalletResponse> {
     return await this.request<CreateNewCCWalletResponse>(
-      "create_new_wallet",{ 
+      "create_new_wallet",{
         host,
         wallet_type: "cc_wallet",
         mode: "new",
@@ -244,6 +257,7 @@ class Wallet extends RpcClient {
   }
 
   public async createNewAdminRLWallet(
+    host: string,
     interval: number,
     limit: number,
     pubkey: string,
@@ -264,7 +278,9 @@ class Wallet extends RpcClient {
     )
   }
 
-  public async createNewUserRLWallet(): Promise<CreateNewUserRlWalletResponse> {
+  public async createNewUserRLWallet(
+    host: string,
+  ): Promise<CreateNewUserRlWalletResponse> {
     return await this.request<CreateNewUserRlWalletResponse>(
       "create_new_wallet",{
         host,
@@ -287,9 +303,13 @@ class Wallet extends RpcClient {
     coins?: string,
     fee?: number,
   ): Promise<CreateSignedTransactionResponse> {
+    let additionArray = [];
+    for(let i = 0; i < additions.length; i++) {
+      additionArray.push(JSON.parse(JSON.stringify(additions[i])));
+    }
     return this.request<CreateSignedTransactionResponse>(
       "create_signed_transaction", {
-        additions: JSON.stringify(additions),
+        additions: additionArray,
         coins,
         fee  
       }
@@ -304,42 +324,42 @@ class Wallet extends RpcClient {
     return this.request<FarmedAmountResponse>("get_farmed_amount", {});
   }
 
-  public async getTransactionCount(walletId: string): Promise<TransactionCountResponse> {
+  public async getTransactionCount(walletId: number): Promise<TransactionCountResponse> {
     return this.request<TransactionCountResponse>("get_transaction_count", {wallet_id: walletId});
   }
 
   // For colour coin wallet
   public async ccSetName(
-    wallet_id: number,
+    walletId: number,
     name: string,
   ): Promise<number> {
     return this.request<number>(
       "cc_set_name", {
-        wallet_id,
+        wallet_id: walletId,
         name
       }
     )
   }
 
   public async ccGetName(
-    wallet_id: number,
+    walletId: number,
   ): Promise<CCGetNameResponse> {
     return this.request<CCGetNameResponse>(
       "cc_get_name", {
-        wallet_id
+        wallet_id: walletId
       }
     )
   }
   
   public async ccSpend(
-    wallet_id: number,
+    walletId: number,
     inner_address: string,
     amount: number,
     fee?: number
   ): Promise<CCSpendResponse> {
     return this.request<CCSpendResponse>(
       "cc_spend", {
-        wallet_id,
+        wallet_id: walletId,
         inner_address,
         amount,
         fee: fee !== undefined? fee : 0
@@ -348,11 +368,11 @@ class Wallet extends RpcClient {
   }
 
   public async ccGetColour(
-    wallet_id: number,
+    walletId: number,
   ): Promise<CCGetColourResponse> {
     return this.request<CCGetColourResponse>(
       "cc_get_colour", {
-        wallet_id
+        wallet_id: walletId
       }
     )
   }
@@ -368,6 +388,22 @@ class Wallet extends RpcClient {
   
   public getCoinInfo(parentCoinInfo: string, puzzleHash: string, amount: number): string {
     return get_coin_info(parentCoinInfo, puzzleHash, amount / 1000000000000);
+  }
+
+  public fromMojo(amount: number) {
+    return amount / 1000000000000;
+  }
+
+  public toMojo(amount: number) {
+    return amount * 1000000000000;
+  }
+
+  public fromCCAmount(amount: number) {
+    return amount / 1000;
+  }
+
+  public toCCAmount(amount: number) {
+    return amount * 1000;
   }
 }
 
