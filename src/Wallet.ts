@@ -215,8 +215,8 @@ class Wallet extends RpcClient {
     amount: number,
     address: string,
     fee: number
-  ): Promise<Transaction> {
-    const { transaction } = await this.request<TransactionResponse>(
+  ): Promise<TransactionResponse> {
+    const transaction = await this.request<TransactionResponse>(
       "send_transaction",{
         wallet_id: walletId,
         amount,
