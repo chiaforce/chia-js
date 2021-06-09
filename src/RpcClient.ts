@@ -20,22 +20,18 @@ class RpcClient {
   private readonly hostname: string;
   private readonly port: number;
   private readonly agent: Agent;
-  // private readonly certPath: string;
-  // private readonly keyPath: string;
 
   public constructor(options: ChiaOptions) {
     this.net = options.net;
     this.protocol = options.protocol;
     this.hostname = options.hostname;
     this.port = options.port;
-    // this.certPath = options.certPath;
-    // this.keyPath = options.keyPath;
 
     this.agent = new Agent({
       ...(typeof options.caCertPath !== 'boolean' ? { ca: readFileSync(options.caCertPath) } : {}),
       cert: readFileSync(options.certPath),
       key: readFileSync(options.keyPath),
-      rejectUnauthorized: options.hostname !== "localhost",
+      rejectUnauthorized: true,//options.hostname !== "localhost",
       host: options.hostname,
       port: options.port
     });
