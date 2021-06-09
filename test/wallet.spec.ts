@@ -108,7 +108,7 @@ describe("Wallet", () => {
       nock("https://localhost:9256")
         .defaultReplyHeaders({ "access-control-allow-origin": "*" })
         .post("/get_sync_status")
-        .reply(200, { syncing: "success" });
+        .reply(200, "success");
 
       expect(await wallet.getSyncStatus()).toEqual("success");
     });

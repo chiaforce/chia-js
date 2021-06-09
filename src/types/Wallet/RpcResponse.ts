@@ -28,6 +28,8 @@ export interface AddKeyResponse extends RpcResponse {
 
 export interface SyncStatusResponse extends RpcResponse {
     syncing: boolean;
+    synced: boolean;
+    genesis_initialized: boolean;
 }
 
 export interface HeightResponse extends RpcResponse {

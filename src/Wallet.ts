@@ -127,13 +127,12 @@ class Wallet extends RpcClient {
     return this.request<{}>("delete_all_keys", {});
   }
 
-  public async getSyncStatus(): Promise<boolean> {
-    const { syncing } = await this.request<SyncStatusResponse>(
+  public async getSyncStatus(): Promise<SyncStatusResponse> {
+    const status = await this.request<SyncStatusResponse>(
       "get_sync_status",
       {}
     );
-
-    return syncing;
+    return status;
   }
 
   public async getHeightInfo(): Promise<number> {
