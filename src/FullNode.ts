@@ -21,6 +21,8 @@ import { address_to_puzzle_hash, puzzle_hash_to_address, get_coin_info } from "c
 class FullNode extends RpcClient {
   public constructor(options?: Partial<ChiaOptions> & CertPath) {
     const net = options?.net || "mainnet";
+    console.log("net", net)
+    console.log("option.net", options?.net)
     const chiaConfig = getChiaConfig(net);
     const defaultProtocol = "https";
     const defaultHostname = chiaConfig?.self_hostname || "localhost";
