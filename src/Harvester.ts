@@ -23,6 +23,7 @@ class Harvester extends RpcClient {
 
     super({
       net,
+      debug: options?.debug ? options.debug : false,
       protocol: options?.protocol || defaultProtocol,
       hostname: options?.hostname || defaultHostname,
       port: options?.port || defaultPort,

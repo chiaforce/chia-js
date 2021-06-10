@@ -10,6 +10,7 @@ class SharedCalls extends RpcClient {
       const chiaConfig = getChiaConfig(net);
       super({
         net,
+        debug: options?.debug ? options.debug : false,
         protocol: options?.protocol || "https",
         hostname: options?.hostname || (chiaConfig?.self_hostname || "localhost"),
         port: options?.port || (chiaConfig?.full_node.rpc_port || 8555),

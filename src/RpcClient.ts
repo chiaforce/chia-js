@@ -12,6 +12,7 @@ interface ChiaOptions {
   caCertPath: string | boolean;
   certPath: string;
   keyPath: string;
+  debug?: boolean;
 }
 
 class RpcClient {
@@ -22,6 +23,7 @@ class RpcClient {
   private readonly agent: Agent;
   private readonly certPath: string;
   private readonly keyPath: string;
+  private readonly debug?: boolean;
 
   public constructor(options: ChiaOptions) {
     this.net = options.net;
@@ -30,6 +32,7 @@ class RpcClient {
     this.port = options.port;
     this.certPath = options.certPath;
     this.keyPath = options.keyPath;
+    this.debug = options.debug;
 
     this.agent = new Agent({
       ...(typeof options.caCertPath !== 'boolean' ? { ca: readFileSync(options.caCertPath) } : {}),
@@ -39,9 +42,6 @@ class RpcClient {
       host: options.hostname,
       port: options.port
     });
-    // console.log("caCertPath", options.caCertPath)
-    // console.log("certPath", options.certPath)
-    // console.log("keyPath", options.keyPath);
   }
 
   private baseUri(): string {
@@ -52,8 +52,10 @@ class RpcClient {
     route: string,
     body: Record<string, string | number | boolean | string[] | undefined>
   ): Promise<T> {
-    // console.log("\x1b[33m", `${route}`);
-    // console.log("\x1b[32m", `curl --insecure --cert ${this.certPath} --key ${this.keyPath} -d '${JSON.stringify(body)}' -H "Content-Type: application/json" -X POST ${this.baseUri()}/${route} | python -m json.tool`);
+    if(this.debug) {
+      console.log("\x1b[33m", `${route}`);
+      console.log("\x1b[32m", `curl --insecure --cert ${this.certPath} --key ${this.keyPath} -d '${JSON.stringify(body)}' -H "Content-Type: application/json" -X POST ${this.baseUri()}/${route} | python -m json.tool`);
+    }
     const { data } = await axios.post<T>(`${this.baseUri()}/${route}`, body, {
       httpsAgent: this.agent,
     });
