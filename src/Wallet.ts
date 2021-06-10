@@ -390,6 +390,8 @@ class Wallet extends RpcClient {
     for(let i = 0; i < ids.length; i++) {
       idsObj[ids[i].wallet_id] = ids[i].amount;
     }
+    console.log(idsObj);
+    console.log(JSON.stringify(idsObj));
     return this.request<boolean>(
       "create_offer_for_ids", {
         ids: JSON.stringify(idsObj),
