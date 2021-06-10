@@ -1,6 +1,6 @@
 {
   "name": "chia-js",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Chia-js",
   "main": "dist/index.js",
   "scripts": {
