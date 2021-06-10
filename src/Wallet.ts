@@ -394,7 +394,7 @@ class Wallet extends RpcClient {
     console.log(JSON.stringify(idsObj));
     return this.request<boolean>(
       "create_offer_for_ids", {
-        ids: JSON.stringify(idsObj),
+        ids: JSON.parse(JSON.stringify(idsObj)),
         filename
       }
     )

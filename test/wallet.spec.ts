@@ -331,5 +331,13 @@ describe("Wallet", () => {
         .reply(200, "success");
       expect(await wallet.ccGetColour(2)).toEqual("success");
     })
+
+    // it("call create_offer_for_ids", async () => {
+    //   nock("https://localhost:9256")
+    //     .defaultReplyHeaders({ "access-control-allow-origin": "*"})
+    //     .post("/create_offer_for_ids", {ids: {1:-1000,4:50}, filename: "xxxx.offer"})
+    //     .reply(200, "success");
+    //   expect(await wallet.ccCreateOfferForIds([{wallet_id: 1, amount: -1000}, {wallet_id: 4, amount:500}], "xxxx.offer")).toEqual("success");
+    // })
   });
 });
