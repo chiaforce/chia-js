@@ -31,6 +31,7 @@ import { WalletBalance } from "./types/Wallet/WalletBalance";
 import { WalletInfo } from "./types/Wallet/WalletInfo";
 import { Addition } from "./types/Wallet/Addition";
 import { CCTradeIds } from "./types/Wallet/CCTradeIds";
+import { RLOrigin } from "./types/Wallet/RLOrigin";
 // @ts-ignore
 import { address_to_puzzle_hash, puzzle_hash_to_address, get_coin_info } from "chia-utils";
 
@@ -390,8 +391,6 @@ class Wallet extends RpcClient {
     for(let i = 0; i < ids.length; i++) {
       idsObj[ids[i].wallet_id] = ids[i].amount;
     }
-    console.log(idsObj);
-    console.log(JSON.stringify(idsObj));
     return this.request<boolean>(
       "create_offer_for_ids", {
         ids: JSON.parse(JSON.stringify(idsObj)),
@@ -444,6 +443,56 @@ class Wallet extends RpcClient {
       }
     )
   }
+
+  // For rate limited wallet 
+  public async rlSetUserInfo(
+    walletId: string,
+    origin: RLOrigin,
+    interval: number,
+    limit: number,
+    admin_pubkey: string,
+  ): Promise<void> {
+    return this.request<void>(
+      "rl_set_user_info", {
+        wallet_id: walletId,
+        origin: JSON.stringify(origin),
+        interval,
+        limit,
+        admin_pubkey,
+      }
+    )
+  }
+
+  public async rlSendClawbackTransaction(
+    walletId: string,
+    fee? : number,
+  ): Promise<CCSpendResponse> {
+    return this.request<CCSpendResponse>(
+      "send_clawback_transaction", {
+        wallet_id: walletId,
+        fee
+      }
+    )
+  }
+
+  public async rlAddRateLimitedFund(
+    walletId: string,
+    puzzleHash: string,
+    amount: number,
+    fee? : number,
+  ): Promise<string> {
+    return this.request<string>(
+      "add_rate_limited_fund", {
+        wallet_id: walletId,
+        puzzle_hash: puzzleHash,
+        amount,
+        fee
+      }
+    )
+  }
+
+  // Distributed identity wallet
+
 
   /* https://github.com/CMEONE/chia-utils */
   public addressToPuzzleHash(address: string): string {
