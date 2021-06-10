@@ -23,12 +23,14 @@ import {
   CreateSignedTransactionResponse,
   CCGetNameResponse,
   CCSpendResponse,
-  CCGetColourResponse
+  CCGetColourResponse,
+  CCDiscrepancyResponse,
 } from "./types/Wallet/RpcResponse";
 import { Transaction } from "./types/Wallet/Transaction";
 import { WalletBalance } from "./types/Wallet/WalletBalance";
 import { WalletInfo } from "./types/Wallet/WalletInfo";
 import { Addition } from "./types/Wallet/Addition";
+import { CCTradeIds } from "./types/Wallet/CCTradeIds";
 // @ts-ignore
 import { address_to_puzzle_hash, puzzle_hash_to_address, get_coin_info } from "chia-utils";
 
@@ -376,6 +378,67 @@ class Wallet extends RpcClient {
     return this.request<CCGetColourResponse>(
       "cc_get_colour", {
         wallet_id: walletId
+      }
+    )
+  }
+
+  public async ccCreateOfferForIds(
+    ids: Array<CCTradeIds>,
+    filename: string
+  ): Promise<boolean> {
+    let idsObj:any = {};
+    for(let i = 0; i < ids.length; i++) {
+      idsObj[ids[i].wallet_id] = ids[i].amount;
+    }
+    return this.request<boolean>(
+      "create_offer_for_ids", {
+        ids: JSON.stringify(idsObj),
+        filename
+      }
+    )
+  }
+
+  public async ccGetDiscrepanciesForOffer(
+    filename: string
+  ): Promise<CCDiscrepancyResponse> {
+    return this.request<CCDiscrepancyResponse>(
+      "get_discrepancies_for_offer", {
+        filename
+      }
+    )
+  }
+
+  public async ccRespondToOffer(
+    filename: string
+  ): Promise<boolean> {
+    return this.request<boolean>(
+      "respond_to_offer", {
+        filename
+      }
+    )
+  }
+
+  public async ccGetTrade(
+    tradeId: string
+  ): Promise<Object> {
+    return this.request<Object>(
+      "get_trade", {
+        trade_id: tradeId
+      }
+    )
+  }
+
+  public async ccGetAllTrades(): Promise<Array<Object>> {
+    return this.request<Array<Object>>(
+      "get_all_trades", {}
+    )
+  }
+
+  public async ccCancelTrade(tradeId: string, secure?: boolean): Promise<boolean> {
+    return this.request<boolean>(
+      "cancel_trade", {
+        trade_id: tradeId,
+        secure
       }
     )
   }

@@ -114,3 +114,7 @@ export interface CCGetColourResponse extends RpcResponse {
   wallet_id: number;
   colour: string;
 }
+
+export interface CCDiscrepancyResponse extends RpcResponse {
+  discrepancies: Object;
+}
