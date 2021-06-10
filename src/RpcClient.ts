@@ -48,8 +48,8 @@ class RpcClient {
     route: string,
     body: Record<string, string | number | boolean | string[] | undefined>
   ): Promise<T> {
-    // console.log("\x1b[33m", `${route}`);
-    // console.log("\x1b[32m", `curl --insecure --cert ${this.certPath} --key ${this.keyPath} -d '${JSON.stringify(body)}' -H "Content-Type: application/json" -X POST ${this.baseUri()}/${route} | python -m json.tool`);
+    console.log("\x1b[33m", `${route}`);
+    console.log("\x1b[32m", `curl --insecure --cert ${this.certPath} --key ${this.keyPath} -d '${JSON.stringify(body)}' -H "Content-Type: application/json" -X POST ${this.baseUri()}/${route} | python -m json.tool`);
     const { data } = await axios.post<T>(`${this.baseUri()}/${route}`, body, {
       httpsAgent: this.agent,
     });
