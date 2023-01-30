@@ -5,7 +5,7 @@ TypeScript client for communicating with [Chia](https://www.chia.net/) RPC inter
 ### Full Node
 
 ```
-import { FullNode } from 'chia-client';
+import { FullNode } from 'chia-js';
 
 const fullNode = new FullNode({
     protocol: 'http',
@@ -19,7 +19,7 @@ const blockchain = await fullNode.getBlockchainState();
 ### Wallet
 
 ```
-import { Wallet } from 'chia-client';
+import { Wallet } from 'chia-js';
 
 const wallet = new Wallet({
     protocol: 'http',
